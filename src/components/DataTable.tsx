@@ -3,35 +3,33 @@ import { Fragment, useEffect, useState } from "react";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { PersonRecord } from "../types";
 import DataTableDetailRow from "./DataTableDetailRow";
+import {
+  Sorter,
+  Formatter,
+  textSorter,
+  dateSorter,
+  booleanSorter,
+  booleanFormatter,
+  numberSorter,
+  numberFormatter,
+} from "../utils/helper";
 
 interface DataTableProps {
   data: PersonRecord[];
 }
-
-const textSorter = (a: string, b: string) => a.localeCompare(b);
-const numberSorter = (a: number, b: number) => a - b;
-const dateSorter = (a: string, b: string) => new Date(a).getTime() - new Date(b).getTime();
-const booleanSorter = (a: boolean, b: boolean) => (a === b ? 0 : a ? 1 : -1);
-type Sorter = typeof textSorter | typeof numberSorter | typeof dateSorter | typeof booleanSorter;
-
-const booleanFormatter = (value: boolean) => (value ? "Yes" : "No");
-const numberFormatter = (value: number) =>
-  value.toLocaleString(undefined, {
-    maximumFractionDigits: 0,
-  });
-type Formatter = typeof booleanFormatter | typeof numberFormatter;
 
 const DataTable = ({ data }: DataTableProps) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowPerPage] = useState(10);
   const [selectedRow, setSelectedRow] = useState<string>();
 
+  // scroll to top and clear selected row when page changes
   useEffect(() => {
-    // scroll to top and clear selected row
     window.scrollTo(0, 0);
     setSelectedRow(undefined);
   }, [currentPage]);
 
+  // columns and sorter
   const columns: {
     key: keyof PersonRecord;
     label: string;
@@ -46,14 +44,14 @@ const DataTable = ({ data }: DataTableProps) => {
   ];
 
   const [sortKey, setSortKey] = useState<keyof PersonRecord | undefined>();
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  const [isSortAsc, setIsSortAsc] = useState(true);
 
   const handleSort = (key: keyof PersonRecord) => {
     if (sortKey === key) {
-      setSortDirection((sortDirection) => (sortDirection === "asc" ? "desc" : "asc"));
+      setIsSortAsc((isAsc) => !isAsc);
     } else {
       setSortKey(key);
-      setSortDirection("asc");
+      setIsSortAsc(true);
     }
   };
 
@@ -61,9 +59,7 @@ const DataTable = ({ data }: DataTableProps) => {
     if (sortKey) {
       const sorter = columns.find((column) => column.key === sortKey)?.sorter;
       if (sorter) {
-        return (
-          sorter(a[sortKey] as never, b[sortKey] as never) * (sortDirection === "asc" ? 1 : -1)
-        );
+        return sorter(a[sortKey] as never, b[sortKey] as never) * (isSortAsc ? 1 : -1);
       }
     }
     return 0;
@@ -74,10 +70,46 @@ const DataTable = ({ data }: DataTableProps) => {
   const totalPages = Math.ceil(sortedData.length / rowsPerPage);
   const displayedData = sortedData.slice(startRow, endRow);
 
+  // pagination component
+  const pagination = (
+    <div className="flex gap-2 my-3 items-center">
+      <div>
+        Page {currentPage + 1} of {totalPages}
+      </div>
+
+      <select
+        className="border rounded-md p-1"
+        onChange={(e) => {
+          setRowPerPage(Number(e.target.value));
+        }}
+        value={rowsPerPage}
+      >
+        <option value="10">10 Rows</option>
+        <option value="20">20 Rows</option>
+        <option value="50">50 Rows</option>
+      </select>
+
+      <div className="flex-1"></div>
+
+      <button
+        onClick={() => setCurrentPage((currentPage) => currentPage - 1)}
+        disabled={currentPage === 0}
+      >
+        <ChevronLeft size={20} />
+      </button>
+      <button
+        onClick={() => setCurrentPage((currentPage) => currentPage + 1)}
+        disabled={endRow >= data.length}
+      >
+        <ChevronRight size={20} />
+      </button>
+    </div>
+  );
+
   return (
     <div className="max-w-4xl mx-auto">
-      {/* table body */}
-      <div className="border rounded-lg">
+      {pagination}
+      <div className="border rounded-lg my-5">
         <table className="data-table">
           <thead className="border-b">
             <tr>
@@ -89,8 +121,7 @@ const DataTable = ({ data }: DataTableProps) => {
                   onClick={() => column.sorter && handleSort(column.key)}
                 >
                   {column.label}{" "}
-                  {!!column.sorter &&
-                    (sortKey === column.key ? (sortDirection === "asc" ? "↑" : "↓") : "")}
+                  {!!column.sorter && (sortKey === column.key ? (isSortAsc ? "↑" : "↓") : "")}
                 </th>
               ))}
             </tr>
@@ -124,41 +155,7 @@ const DataTable = ({ data }: DataTableProps) => {
           </tbody>
         </table>
       </div>
-
-      {/* pagination */}
-      <div>
-        <div className="flex gap-2 my-3 items-center">
-          <div>
-            Page {currentPage + 1} of {totalPages}
-          </div>
-
-          <select
-            className="border rounded-md p-1"
-            onChange={(e) => {
-              setRowPerPage(Number(e.target.value));
-            }}
-          >
-            <option value="10">10 Rows</option>
-            <option value="20">20 Rows</option>
-            <option value="50">50 Rows</option>
-          </select>
-
-          <div className="flex-1"></div>
-
-          <button
-            onClick={() => setCurrentPage((currentPage) => currentPage - 1)}
-            disabled={currentPage === 0}
-          >
-            <ChevronLeft size={20} />
-          </button>
-          <button
-            onClick={() => setCurrentPage((currentPage) => currentPage + 1)}
-            disabled={endRow >= data.length}
-          >
-            <ChevronRight size={20} />
-          </button>
-        </div>
-      </div>
+      {pagination}
     </div>
   );
 };
