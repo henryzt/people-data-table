@@ -69,16 +69,27 @@ const DataTable = ({ data }: DataTableProps) => {
   const endRow = startRow + rowsPerPage;
   const totalPages = Math.ceil(sortedData.length / rowsPerPage);
   const displayedData = sortedData.slice(startRow, endRow);
+  const paginationRanges = Array.from({ length: totalPages }, (_, i) => i);
 
   // pagination component
   const pagination = (
     <div className="flex gap-2 my-3 items-center">
-      <div>
-        Page {currentPage + 1} of {totalPages}
-      </div>
+      <div>Page</div>
+      <select
+        onChange={(e) => {
+          setCurrentPage(Number(e.target.value));
+        }}
+        value={currentPage}
+      >
+        {paginationRanges.map((page) => (
+          <option key={page} value={page}>
+            {page + 1}
+          </option>
+        ))}
+      </select>
+      <div>of {totalPages}</div>
 
       <select
-        className="border rounded-md p-1"
         onChange={(e) => {
           setRowPerPage(Number(e.target.value));
         }}
@@ -97,6 +108,7 @@ const DataTable = ({ data }: DataTableProps) => {
       >
         <ChevronLeft size={20} />
       </button>
+
       <button
         onClick={() => setCurrentPage((currentPage) => currentPage + 1)}
         disabled={endRow >= data.length}

@@ -54,3 +54,7 @@ button:disabled {
   cursor: not-allowed;
   opacity: 0.5;
 }
+
+select {
+  @apply border rounded-md p-1;
+}
