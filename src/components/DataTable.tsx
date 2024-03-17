@@ -1,5 +1,6 @@
 import { Fragment, useState } from "react";
 import "./DataTable.css";
+import { ChevronDown, ChevronRight } from "lucide-react";
 
 interface PersonRecord {
   _id: string;
@@ -42,6 +43,7 @@ const DataTable = ({ data }: DataTableProps) => {
         <table className="data-table">
           <thead className="border-b">
             <tr>
+              <th></th>
               <th>Name</th>
               <th>DOB</th>
               <th>Email</th>
@@ -58,6 +60,9 @@ const DataTable = ({ data }: DataTableProps) => {
                     className={`cursor-pointer ${isSelected ? "selected border-none" : "tr-hover"}`}
                     onClick={() => setSelectedRow(isSelected ? undefined : person._id)}
                   >
+                    <td className="w-5 !pr-0 opacity-40">
+                      {isSelected ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
+                    </td>
                     <td>{person.name}</td>
                     <td>{person.dob}</td>
                     <td>{person.email}</td>
@@ -99,8 +104,9 @@ const DataTable = ({ data }: DataTableProps) => {
 const DetailRow = ({ person }: { person: PersonRecord }) => {
   return (
     <tr>
+      <td></td>
       <td colSpan={5} className="!pt-0">
-        <div className="grid grid-cols-2 whitespace-normal bg-gray-100 p-3 rounded-lg">
+        <div className="grid grid-cols-2 whitespace-normal bg-gray-100 py-3 px-8 rounded-lg">
           <div className="grid grid-cols-4 items-center">
             <div className="info-title">Telephone</div>
             <div className="info-body">{person.telephone}</div>
