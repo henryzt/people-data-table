@@ -3,7 +3,7 @@ import data from "./assets/random-people-data.json";
 
 function App() {
   return (
-    <div className="mt-10 md:mt-32">
+    <div className="pt-10 md:pt-32">
       <DataTable data={data.ctRoot} />
     </div>
   );
