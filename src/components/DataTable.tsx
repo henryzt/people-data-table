@@ -55,8 +55,8 @@ const DataTable = ({ data }: DataTableProps) => {
               return (
                 <Fragment key={index}>
                   <tr
-                    className={isSelected ? "selected border-none" : "tr-hover"}
-                    onClick={() => setSelectedRow(person._id)}
+                    className={`cursor-pointer ${isSelected ? "selected border-none" : "tr-hover"}`}
+                    onClick={() => setSelectedRow(isSelected ? undefined : person._id)}
                   >
                     <td>{person.name}</td>
                     <td>{person.dob}</td>
@@ -98,10 +98,10 @@ const DataTable = ({ data }: DataTableProps) => {
 
 const DetailRow = ({ person }: { person: PersonRecord }) => {
   return (
-    <tr className="selected">
-      <td colSpan={5}>
+    <tr>
+      <td colSpan={5} className="!pt-0">
         <div className="grid grid-cols-2 whitespace-normal bg-gray-100 p-3 rounded-lg">
-          <div className="grid grid-cols-3 items-center">
+          <div className="grid grid-cols-4 items-center">
             <div className="info-title">Telephone</div>
             <div className="info-body">{person.telephone}</div>
 
