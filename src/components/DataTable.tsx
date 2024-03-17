@@ -1,25 +1,8 @@
-import { Fragment, useState } from "react";
 import "./DataTable.css";
+import { Fragment, useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
-
-interface PersonRecord {
-  _id: string;
-  name: string;
-  dob: string;
-  address: {
-    street: string;
-    town: string;
-    postode: string;
-  };
-  telephone: string;
-  pets: string[];
-  score: number;
-  email: string;
-  url: string;
-  description: string;
-  verified: boolean;
-  salary: number;
-}
+import { PersonRecord } from "../types";
+import DataTableDetailRow from "./DataTableDetailRow";
 
 interface DataTableProps {
   data: PersonRecord[];
@@ -38,8 +21,8 @@ const DataTable = ({ data }: DataTableProps) => {
 
   return (
     <div className="max-w-4xl mx-auto">
+      {/* table body */}
       <div className="border rounded-lg">
-        {/* table body */}
         <table className="data-table">
           <thead className="border-b">
             <tr>
@@ -57,7 +40,7 @@ const DataTable = ({ data }: DataTableProps) => {
               return (
                 <Fragment key={index}>
                   <tr
-                    className={`cursor-pointer ${isSelected ? "selected border-none" : "tr-hover"}`}
+                    className={`cursor-pointer ${isSelected ? "selected" : "tr-hover"}`}
                     onClick={() => setSelectedRow(isSelected ? undefined : person._id)}
                   >
                     <td className="w-5 !pr-0 opacity-40">
@@ -69,7 +52,7 @@ const DataTable = ({ data }: DataTableProps) => {
                     <td>{person.verified ? "Yes" : "No"}</td>
                     <td>{person.salary}</td>
                   </tr>
-                  {isSelected && <DetailRow person={person} />}
+                  {isSelected && <DataTableDetailRow person={person} />}
                 </Fragment>
               );
             })}
@@ -77,8 +60,8 @@ const DataTable = ({ data }: DataTableProps) => {
         </table>
       </div>
 
+      {/* pagination */}
       <div>
-        {/* pagination */}
         <div className="flex gap-2 my-3 items-center">
           <div className="flex-1">
             Page {currentPage + 1} of {totalPages}
@@ -98,43 +81,6 @@ const DataTable = ({ data }: DataTableProps) => {
         </div>
       </div>
     </div>
-  );
-};
-
-const DetailRow = ({ person }: { person: PersonRecord }) => {
-  return (
-    <tr>
-      <td></td>
-      <td colSpan={5} className="!pt-0">
-        <div className="grid grid-cols-2 whitespace-normal bg-gray-100 py-3 px-8 rounded-lg">
-          <div className="grid grid-cols-4 items-center">
-            <div className="info-title">Telephone</div>
-            <div className="info-body">{person.telephone}</div>
-
-            <div className="info-title">Pets</div>
-            <div className="info-body">{person.pets.join(", ")}</div>
-
-            <div className="info-title">Score</div>
-            <div className="info-body">{person.score}</div>
-
-            <div className="info-title">URL</div>
-            <div className="info-body">{person.url}</div>
-          </div>
-
-          <div>
-            <div className="info-title">Address</div>
-            <div className="info-body">
-              <div>{person.address.street}</div>
-              <div>{person.address.town}</div>
-              <div>{person.address.postode}</div>
-            </div>
-
-            <div className="info-title">Description</div>
-            <div className="info-body">{person.description}</div>
-          </div>
-        </div>
-      </td>
-    </tr>
   );
 };
 

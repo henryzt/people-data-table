@@ -23,7 +23,7 @@
 }
 
 .data-table .selected {
-  @apply text-black text-opacity-50 hover:text-opacity-40 duration-100;
+  @apply text-black text-opacity-50 hover:text-opacity-40 duration-100 border-none;
 }
 
 .info-title{
