@@ -1,0 +1,7 @@
+.data-table {
+  @apply text-left table-auto w-full;
+}
+
+.data-table td, .data-table th {
+  @apply px-2 py-1 max-w-60 whitespace-nowrap overflow-ellipsis overflow-hidden;
+}

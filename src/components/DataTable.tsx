@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./DataTable.css";
 
 interface PersonRecord {
   _id: string;
@@ -32,9 +33,9 @@ const DataTable = ({ data }: DataTableProps) => {
   const displayedData = data.slice(startRow, endRow);
 
   return (
-    <div>
+    <div className="max-w-4xl mx-auto">
       {/* table body */}
-      <table>
+      <table className="data-table">
         <thead>
           <tr>
             <th>Name</th>
@@ -58,7 +59,7 @@ const DataTable = ({ data }: DataTableProps) => {
       </table>
 
       {/* pagination */}
-      <div className="flex gap-2">
+      <div className="flex gap-2 my-3">
         <button
           onClick={() => setCurrentPage((currentPage) => currentPage - 1)}
           disabled={currentPage === 0}
