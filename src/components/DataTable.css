@@ -26,6 +26,10 @@
   @apply text-black text-opacity-50 hover:text-opacity-40 duration-100 border-none;
 }
 
+.data-table .sortable-header {
+  @apply cursor-pointer hover:text-black duration-100;
+}
+
 .info-title{
   @apply font-bold text-sm text-gray-600 rounded-full w-fit text-center h-fit py-px my-1;
 }
