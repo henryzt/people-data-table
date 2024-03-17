@@ -91,7 +91,12 @@ const DataTable = ({ data }: DataTableProps) => {
 
       <select
         onChange={(e) => {
-          setRowPerPage(Number(e.target.value));
+          const newRowsPerPage = Number(e.target.value);
+          setRowPerPage(newRowsPerPage);
+          const newTotalPages = Math.ceil(data.length / newRowsPerPage);
+          if (currentPage >= newTotalPages) {
+            setCurrentPage(newTotalPages - 1);
+          }
         }}
         value={rowsPerPage}
       >
