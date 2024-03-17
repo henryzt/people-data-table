@@ -14,6 +14,13 @@ const dateSorter = (a: string, b: string) => new Date(a).getTime() - new Date(b)
 const booleanSorter = (a: boolean, b: boolean) => (a === b ? 0 : a ? 1 : -1);
 type Sorter = typeof textSorter | typeof numberSorter | typeof dateSorter | typeof booleanSorter;
 
+const booleanFormatter = (value: boolean) => (value ? "Yes" : "No");
+const numberFormatter = (value: number) =>
+  value.toLocaleString(undefined, {
+    maximumFractionDigits: 0,
+  });
+type Formatter = typeof booleanFormatter | typeof numberFormatter;
+
 const DataTable = ({ data }: DataTableProps) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowPerPage] = useState(10);
@@ -29,12 +36,13 @@ const DataTable = ({ data }: DataTableProps) => {
     key: keyof PersonRecord;
     label: string;
     sorter?: Sorter;
+    formatter?: Formatter;
   }[] = [
     { key: "name", label: "Name", sorter: textSorter },
     { key: "dob", label: "DOB", sorter: dateSorter },
     { key: "email", label: "Email", sorter: textSorter },
-    { key: "verified", label: "Verified", sorter: booleanSorter },
-    { key: "salary", label: "Salary", sorter: numberSorter },
+    { key: "verified", label: "Verified", sorter: booleanSorter, formatter: booleanFormatter },
+    { key: "salary", label: "Salary", sorter: numberSorter, formatter: numberFormatter },
   ];
 
   const [sortKey, setSortKey] = useState<keyof PersonRecord | undefined>();
@@ -99,10 +107,16 @@ const DataTable = ({ data }: DataTableProps) => {
                     <td className="w-5 !pr-0 opacity-40">
                       {isSelected ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
                     </td>
+                    {/* column data */}
                     {columns.map((column, index) => (
-                      <td key={index}>{person[column.key] as string}</td>
+                      <td key={index}>
+                        {column.formatter
+                          ? column.formatter(person[column.key] as never)
+                          : (person[column.key] as string)}
+                      </td>
                     ))}
                   </tr>
+                  {/* row expander */}
                   {isSelected && <DataTableDetailRow person={person} />}
                 </Fragment>
               );
