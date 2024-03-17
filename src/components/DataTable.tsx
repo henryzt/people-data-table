@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import "./DataTable.css";
 
 interface PersonRecord {
@@ -33,6 +33,8 @@ const DataTable = ({ data }: DataTableProps) => {
   const displayedData = data.slice(startRow, endRow);
   const totalPages = Math.ceil(data.length / rowsPerPage);
 
+  const [selectedRow, setSelectedRow] = useState<string>();
+
   return (
     <div className="max-w-4xl mx-auto">
       <div className="border rounded-lg">
@@ -48,15 +50,24 @@ const DataTable = ({ data }: DataTableProps) => {
             </tr>
           </thead>
           <tbody>
-            {displayedData.map((person, index) => (
-              <tr key={index}>
-                <td>{person.name}</td>
-                <td>{person.dob}</td>
-                <td>{person.email}</td>
-                <td>{person.verified ? "Yes" : "No"}</td>
-                <td>{person.salary}</td>
-              </tr>
-            ))}
+            {displayedData.map((person, index) => {
+              const isSelected = selectedRow === person._id;
+              return (
+                <Fragment key={index}>
+                  <tr
+                    className={isSelected ? "selected border-none" : "tr-hover"}
+                    onClick={() => setSelectedRow(person._id)}
+                  >
+                    <td>{person.name}</td>
+                    <td>{person.dob}</td>
+                    <td>{person.email}</td>
+                    <td>{person.verified ? "Yes" : "No"}</td>
+                    <td>{person.salary}</td>
+                  </tr>
+                  {isSelected && <DetailRow person={person} />}
+                </Fragment>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -82,6 +93,42 @@ const DataTable = ({ data }: DataTableProps) => {
         </div>
       </div>
     </div>
+  );
+};
+
+const DetailRow = ({ person }: { person: PersonRecord }) => {
+  return (
+    <tr className="selected">
+      <td colSpan={5}>
+        <div className="grid grid-cols-2 whitespace-normal bg-gray-100 p-3 rounded-lg">
+          <div className="grid grid-cols-3 items-center">
+            <div className="info-title">Telephone</div>
+            <div className="info-body">{person.telephone}</div>
+
+            <div className="info-title">Pets</div>
+            <div className="info-body">{person.pets.join(", ")}</div>
+
+            <div className="info-title">Score</div>
+            <div className="info-body">{person.score}</div>
+
+            <div className="info-title">URL</div>
+            <div className="info-body">{person.url}</div>
+          </div>
+
+          <div>
+            <div className="info-title">Address</div>
+            <div className="info-body">
+              <div>{person.address.street}</div>
+              <div>{person.address.town}</div>
+              <div>{person.address.postode}</div>
+            </div>
+
+            <div className="info-title">Description</div>
+            <div className="info-body">{person.description}</div>
+          </div>
+        </div>
+      </td>
+    </tr>
   );
 };
 

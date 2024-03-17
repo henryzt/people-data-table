@@ -18,6 +18,14 @@
   @apply font-bold text-sm text-gray-500 bg-gray-100;
 }
 
-.data-table tbody tr {
+.data-table .tr-hover {
   @apply hover:bg-gray-100 hover:bg-opacity-50 duration-100;
+}
+
+.info-title{
+  @apply bg-gray-100 text-sm rounded-full w-fit h-fit px-2 my-2;
+}
+
+.info-body{
+  @apply col-span-2 text-sm text-gray-500;
 }
