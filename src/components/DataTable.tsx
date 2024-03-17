@@ -10,7 +10,7 @@ interface DataTableProps {
 
 const DataTable = ({ data }: DataTableProps) => {
   const [currentPage, setCurrentPage] = useState(0);
-  const [rowsPerPage] = useState(10);
+  const [rowsPerPage, setRowPerPage] = useState(10);
 
   const startRow = currentPage * rowsPerPage;
   const endRow = startRow + rowsPerPage;
@@ -63,9 +63,23 @@ const DataTable = ({ data }: DataTableProps) => {
       {/* pagination */}
       <div>
         <div className="flex gap-2 my-3 items-center">
-          <div className="flex-1">
+          <div>
             Page {currentPage + 1} of {totalPages}
           </div>
+
+          <select
+            className="border rounded-md p-1"
+            onChange={(e) => {
+              setRowPerPage(Number(e.target.value));
+            }}
+          >
+            <option value="10">10 Rows</option>
+            <option value="20">20 Rows</option>
+            <option value="50">50 Rows</option>
+          </select>
+
+          <div className="flex-1"></div>
+
           <button
             onClick={() => setCurrentPage((currentPage) => currentPage - 1)}
             disabled={currentPage === 0}
