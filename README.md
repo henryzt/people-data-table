@@ -1,30 +1,23 @@
-# React + TypeScript + Vite
+# People Record Table
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is built with Vite, React, TypeScript and Tailwind CSS.
 
-Currently, two official plugins are available:
+## Running the project
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
 ```
+yarn install
+yarn dev
+```
+## Features implemented
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+- Table of people records
+- Pagination
+- Row expander for additional details
+- Changing the number of rows per page
+- Sorting by column
+
+## Design decisions and Todos
+
+To prepare for additional features like editing columns shown or filtering, the table column is defined dynamically as a list of objects, each with its own `sort` and `formatter` functions. This allows columns to be easily added or removed, different types of data can also be displayed and sorted dynamically by passing customised functions.
+
+Given more time, the component can be further improved by refactoring the sorting and slicing logic into a custom hook, making it more readable and reusable. The pagination can be implemented as buttons instead of a dropdown for better UX if it's preferred. The table can also be made more accessible by adding keyboard navigation.
