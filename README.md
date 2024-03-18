@@ -1,6 +1,6 @@
 # People Record Table
 
-This project is built with Vite, React, TypeScript and Tailwind CSS.
+This project is built with Vite, React, TypeScript and Tailwind CSS. Deployed at https://people-record-table.netlify.app/.
 
 ## Running the project
 
